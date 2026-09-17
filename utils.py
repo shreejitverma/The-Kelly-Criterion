@@ -87,12 +87,10 @@ def get_kelly(
 
     if correlation:
         roll_cov = returns.expanding(window).cov().dropna()
-        kelly = get_kelly_wrap(roll_cov, return_exces)
+        return get_kelly_wrap(roll_cov, return_exces)
     else:
         var = returns.expanding(window).var().dropna()
-        kelly = return_exces / var
-
-    return kelly
+        return return_exces / var
 
 
 def filter_leverage(serie: pd.Series, leverage: int) -> pd.Series:
@@ -168,7 +166,7 @@ def backtest(
             daily_weights_sum[leverage_cond], axis=0
         )
 
-        name = "max_leverage_" + str(leverage)
+        name = f"max_leverage_{str(leverage)}"
         total_returns[name] = (returns_df * kelly_weights).sum(axis=1)
 
     return total_returns
